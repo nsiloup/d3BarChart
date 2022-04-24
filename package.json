@@ -6,7 +6,13 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": ["d3", "d3.js", "javascript", "graphs", "dashboard"],
+  "keywords": [
+    "d3",
+    "d3.js",
+    "javascript",
+    "graphs",
+    "dashboard"
+  ],
   "author": "Persevernace NSILOU",
   "license": "ISC",
   "dependencies": {

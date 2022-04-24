@@ -13,21 +13,23 @@ document.addEventListener("DOMContentLoaded", async() => {
         let res = await fetch(url);
         let dataGDP = await res.json();
         dataGDP = dataGDP.data;
-        //console.log("dataGDP : ", dataGDP)
+        const dates = dataGDP.map((d, i) => d[0]);
+        const gdp = dataGDP.map((d, i)=> d[1]);
         let svg = d3.select(".chart-container").append("svg")
                     .attr("viewBox", `0, 0, ${w}, ${h}`)
                     .attr("preserveAspectRatio", "xMidYMid meet")
 
         
+        
         //Defining the scales
         let xScale = d3.scaleTime();
-        let minDate = d3.min(dataGDP, (d) => Number(new Date(d[0])));
-        let maxDate = d3.max(dataGDP, (d) => Number(new Date(d[0])));
+        let minDate = d3.min(dates, (d) => Number(new Date(d)));
+        let maxDate = d3.max(dates, (d) => Number(new Date(d)));
         xScale.domain([minDate, maxDate]);
         xScale.range([horizPadding, w - horizPadding])
 
         let yScale = d3.scaleLinear();
-        yScale.domain([0, d3.max(dataGDP, (d) => d[1])]);
+        yScale.domain([0, d3.max(gdp, (d) => d)]);
         yScale.range([h - vertiPadding, vertiPadding]);
 
         let xAxis = d3.axisBottom(xScale)
@@ -43,16 +45,37 @@ document.addEventListener("DOMContentLoaded", async() => {
            .call(yAxis);
 
         let rect = svg.selectAll("rect")
-                      .data(dataGDP)
-                      .enter()
-                      .append("rect")
-                      .attr("x", (d, i) => xScale(new Date(d[0])))
-                      .attr("y", (d, i) => yScale(d[1]))
-                      .attr("width", 2)
-                      .attr("height", (d, i) => (h - yScale(d[1])-vertiPadding))
-                      .attr("fill", "black")
-                      .attr("class", "bar")
+        rect.data(dataGDP)
+            .enter()
+            .append("rect")
+            .attr("x", (d, i) => xScale(new Date(d[0])))
+            .attr("y", (d, i) => yScale(d[1]))
+            .attr("width", 2)
+            .attr("height", (d, i) => (h - yScale(d[1])-vertiPadding))
+            .attr("fill", "black")
+            .attr("class", "bar")
+            .attr("data-date", dates)
+            .attr("data-gdp", gdp)
 
+            // Creating a ToolTip
+            let toolTip = d3.select(".chart-container").append("div")
+                .attr("id", "tooltip")
+                .style("position", "absolute")
+                .style("visibility", "hidden")
+                .style("background-color", "white")
+                .style("border", "solid")
+                .style("border-width", "5%")
+                .style("border-radius", "10%")
+                .style("padding", "2%")
+                .html(`<p>date : /*HOVERED DATE*/<br><br>GDP : /* HOVERED GDP */</p>`)
+
+            d3.select(".bar")
+                .on("mouseover", () => toolTip.style("visibility", "visible"))
+                .on("mousemove", () => {
+                    return toolTip.style("top", d3.select(this).attr("x")+'10px')
+                    .style("left", d3.select(this).attr("y")+'15px')
+                })
+                .on("mouseout", () => toolTip.style("visibility", "hidden"))
 
     }catch(err){
         console.log(err);
