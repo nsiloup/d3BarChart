@@ -44,6 +44,27 @@ document.addEventListener("DOMContentLoaded", async() => {
            .attr("transform", `translate(${horizPadding}, 0)`)
            .call(yAxis);
 
+        // Creating a ToolTip
+        let toolTip = d3.select(".chart-container").append("div")
+            .attr("id", "tooltip")
+            .style("position", "absolute")
+            .style("visibility", "hidden")
+            .style("background-color", "white")
+            .style("border", "solid")
+            .style("border-width", "5%")
+            .style("border-radius", "10%")
+            .style("padding", "2%")
+            // .html(`<p>date : /*HOVERED DATE*/<br><br>GDP : /* HOVERED GDP */</p>`)
+
+        // d3.select(".bar")
+        //     .on("mouseover", () => toolTip.style("visibility", "visible"))
+        //     .on("mousemove", () => {
+        //         return toolTip.style("top", d3.select(this).attr("x")+'10px')
+        //         .style("left", d3.select(this).attr("y")+'15px')
+        //     })
+        //     .on("mouseout", () => toolTip.style("visibility", "hidden"))
+
+        
         let rect = svg.selectAll("rect")
         rect.data(dataGDP)
             .enter()
@@ -56,26 +77,13 @@ document.addEventListener("DOMContentLoaded", async() => {
             .attr("class", "bar")
             .attr("data-date", dates)
             .attr("data-gdp", gdp)
+            .on("mouseover", (d, i) => {
+                d3.select("#tooltip")
+                .style("visibility", "visible")
+                // .html(`<p>date : /*HOVERED DATE*/<br><br>GDP : /* HOVERED GDP */</p>`)
+                log(d3.select('#tooltip').transition().duration(200).style('opacity', 1).text(d))
+            })
 
-            // Creating a ToolTip
-            let toolTip = d3.select(".chart-container").append("div")
-                .attr("id", "tooltip")
-                .style("position", "absolute")
-                .style("visibility", "hidden")
-                .style("background-color", "white")
-                .style("border", "solid")
-                .style("border-width", "5%")
-                .style("border-radius", "10%")
-                .style("padding", "2%")
-                .html(`<p>date : /*HOVERED DATE*/<br><br>GDP : /* HOVERED GDP */</p>`)
-
-            d3.select(".bar")
-                .on("mouseover", () => toolTip.style("visibility", "visible"))
-                .on("mousemove", () => {
-                    return toolTip.style("top", d3.select(this).attr("x")+'10px')
-                    .style("left", d3.select(this).attr("y")+'15px')
-                })
-                .on("mouseout", () => toolTip.style("visibility", "hidden"))
 
     }catch(err){
         console.log(err);
