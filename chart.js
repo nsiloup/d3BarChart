@@ -48,7 +48,7 @@ document.addEventListener("DOMContentLoaded", async() => {
         let toolTip = d3.select(".chart-container").append("div")
             .attr("id", "tooltip")
             .style("position", "absolute")
-            .style("visibility", "hidden")
+            .style("opacity", "0")
             .style("background-color", "white")
             .style("border", "solid")
             .style("border-width", "5%")
@@ -77,11 +77,25 @@ document.addEventListener("DOMContentLoaded", async() => {
             .attr("class", "bar")
             .attr("data-date", dates)
             .attr("data-gdp", gdp)
-            .on("mouseover", (d, i) => {
-                d3.select("#tooltip")
-                .style("visibility", "visible")
-                // .html(`<p>date : /*HOVERED DATE*/<br><br>GDP : /* HOVERED GDP */</p>`)
-                log(d3.select('#tooltip').transition().duration(200).style('opacity', 1).text(d))
+            .on("mouseover", (event, d) => {
+                log("data : ", d)
+                // d3.select("#tooltip")
+                toolTip
+                // .transition()
+                // .duration(200)
+                .style("opacity", "0.8")
+                .html(`<p class="overlay">date : ${d[0]}<br><br>GDP : ${d[1]} Billions</p>`)
+                //log(d3.select('#tooltip').transition().duration(200).style('opacity', 1).text(d))
+            })
+            .on("mousemove", (e, d) => {
+                log("event : ", e)
+                toolTip
+                .style("left", (e.pageX+10)+'px')
+                .style("top", (e.pagey+10)+'px')
+            })
+            .on("mouseout", () => {
+                toolTip
+                .style("opacity", "0")
             })
 
 
