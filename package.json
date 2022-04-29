@@ -15,6 +15,7 @@
   ],
   "author": "Persevernace NSILOU",
   "license": "ISC",
+  "type": "module",
   "dependencies": {
     "d3": "^7.4.4"
   }

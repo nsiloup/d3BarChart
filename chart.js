@@ -75,23 +75,24 @@ document.addEventListener("DOMContentLoaded", async() => {
             .attr("height", (d, i) => (h - yScale(d[1])-vertiPadding))
             .attr("fill", "black")
             .attr("class", "bar")
-            .attr("data-date", dates)
-            .attr("data-gdp", gdp)
+            .attr("data-date",(d, i) => d[0] /*dates*/)
+            .attr("data-gdp",(d, i) => d[1] /*gdp*/)
             .on("mouseover", (event, d) => {
                 log("data : ", d)
                 // d3.select("#tooltip")
                 toolTip
                 // .transition()
                 // .duration(200)
-                .style("opacity", "0.8")
+                .attr('data-date', d[0])
+                .style("opacity", "0.9")
                 .html(`<p class="overlay">date : ${d[0]}<br><br>GDP : ${d[1]} Billions</p>`)
                 //log(d3.select('#tooltip').transition().duration(200).style('opacity', 1).text(d))
             })
             .on("mousemove", (e, d) => {
                 log("event : ", e)
                 toolTip
-                .style("left", (e.pageX+10)+'px')
-                .style("top", (e.pagey+10)+'px')
+                .style("left", ((e.pageX)+(e.pageX*0.02))+'px')//to dynamically follow the mouse
+                .style("top", ((e.pageY)-(e.pageY*0.5))+'px')
             })
             .on("mouseout", () => {
                 toolTip

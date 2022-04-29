@@ -15,6 +15,9 @@ svg {
     justify-content: center;
 }
 
+.bar:hover {
+    fill:rgb(64, 252, 6);
+}
 /* #tooltip {
     background: white;
     border-width: 5%;
